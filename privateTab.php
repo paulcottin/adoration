@@ -1,5 +1,30 @@
 <?php session_start(); 
+//initialise variable
+$plus = 0;
+$moins = 0;
 
+//Défini quelle semaine afficher (décalage par rapport à NOW()
+$now = new DateTime();
+$semaine = new DateInterval("P7D");
+
+if (isset($_POST['plus'])) {
+	echo("plus existe");
+	$plus = $_POST['plus'];
+	for ($i=0; $i < $plus; $i++) { 
+		$semaine->add($semaine);
+	}
+}
+elseif (isset($_POST['moins'])) {
+	$moins = $_POST['moins'];
+	for ($i=0; $i < $moins; $i++) { 
+		$semaine->sub($semaine);
+	}
+}
+	
+$lundi = getLundi($now);
+$jour = new DateInterval("P1D");
+
+//Création de la liaison à la base de données
 $db;
 try{
 	$db = new PDO('mysql:host=localhost;dbname=adoration', 'root', 'root');
@@ -7,11 +32,6 @@ try{
 	echo("erreur db");
 	die('Erreur : ' . $e->getMessage());
 }
-
-//Date actuelle
-$now = new DateTime();
-$lundi = getLundi($now);
-$jour = new DateInterval("P1D");
 
 //Préparation de la requete pour chaque créneaux horaire :
 $sql = "SELECT prenom, nom FROM utilisateurs WHERE id IN (SELECT user_id FROM creneaux WHERE date = ?)";
@@ -24,39 +44,56 @@ $stmt = $db->prepare($sql);
         <title>Inscription adoration NDL</title>
     </head>
     <body>
-    	<table border="1px"> 
-		  <caption> Voici le titre du tableau </caption> 
-	   	<tr> 
-			<th></th> 
-			<?php
-			//première ligne du tableau (jours (Lundi, Mardi, ...))
-				$current = new DateTime();
-				$current->setDate($lundi->format("Y"), $lundi->format("m"), $lundi->format("d"));
-				for ($i=0; $i < 7; $i++) { 
+    	<div>
+    		<span style="float:left">
+		    	<table border="1px"> 
+		    	<?php 
+		    	//pour afficher l'intervalle de la semaine
+		    	$current = new DateTime();
+		    	$current->setDate($lundi->format("Y"), $lundi->format("m"), $lundi->format("d"));
+		    	$current->add(new DateInterval("P6D"));
+		    	?>
+				<caption> 
+				  	
+				  	<a href="privateTab.php?moins="<?php echo($moins-1) ?>><img src="images/flecheGauche.jpg" width="20" height="20"></a>
+				  	Semaine du <?php echo($lundi->format("d/m/Y"));?> au <?php echo($current->format("d/m/Y"));?> 
+				  	<a href="privateTab.php?plus="<?php echo($plus+1) ?>><img src="images/flecheDroite.jpg" width="20" height="20"></a>
+				</caption> 
+			   	<tr> 
+					<th></th> 
+					<?php
+					//première ligne du tableau (jours (Lundi, Mardi, ...))
+						$current->setDate($lundi->format("Y"), $lundi->format("m"), $lundi->format("d"));
+						for ($i=0; $i < 7; $i++) { 
+							?>
+							<th> <?php echo(getDay($current)."<br/>".$current->format("d/m/Y")); ?> </th>
+							<?php 
+							$current->add($jour);
+						}
 					?>
-					<th> <?php echo(getDay($current)."<br/>".$current->format("d/m/Y")); ?> </th>
-					<?php 
-					$current->add($jour);
+			  	</tr> 
+			  	<?php
+			  	for ($i=0; $i < 24; $i++) { 
+			  	?>
+				<tr> 
+					<th> <?php echo $i;?>h00 </th> 
+					<?php
+						$current->setDate($lundi->format("Y"), $lundi->format("m"), $lundi->format("d"));
+						for ($j=0; $j < 7; $j++) { 
+							echo("<td> ".getPersonnes($current, $i, $stmt)."</td>");
+							$current->add($jour);
+						}
+					?>
+				</tr> 
+				<?php
 				}
-			?>
-	  	</tr> 
-	  	<?php
-	  	for ($i=0; $i < 24; $i++) { 
-	  	?>
-		<tr> 
-			<th> <?php echo $i;?>h00 </th> 
-			<?php
-				$current->setDate($lundi->format("Y"), $lundi->format("m"), $lundi->format("d"));
-				for ($j=0; $j < 7; $j++) { 
-					echo("<td> ".getPersonnes($current, $i, $stmt)."</td>");
-					$current->add($jour);
-				}
-			?>
-		</tr> 
-		<?php
-		}
-		?>
-		</table> 
+				?>
+				</table> 
+			</span>
+			<span style="float:center">
+								
+			</span>
+		</div>
     </body>
 </html>
 
