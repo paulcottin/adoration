@@ -24,13 +24,14 @@ $stmt = $db->prepare($sql);
         <title>Inscription adoration NDL</title>
     </head>
     <body>
-    	<table border="1"> 
+    	<table border="1px"> 
 		  <caption> Voici le titre du tableau </caption> 
 	   	<tr> 
 			<th></th> 
 			<?php
 			//première ligne du tableau (jours (Lundi, Mardi, ...))
-				$current = new DateTime($lundi->format("d/m/Y"));
+				$current = new DateTime();
+				$current->setDate($lundi->format("Y"), $lundi->format("m"), $lundi->format("d"));
 				for ($i=0; $i < 7; $i++) { 
 					?>
 					<th> <?php echo(getDay($current)."<br/>".$current->format("d/m/Y")); ?> </th>

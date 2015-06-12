@@ -39,7 +39,7 @@
 
     </script>
     <body>
-        <p class="centerWhite70">Adoration Notre-Dame de Lourdes</p>
+        <!-- <p class="centerWhite70">Adoration Notre-Dame de Lourdes</p> -->
         <p class="align40">Inscription</p>
         <div align="center">
             <form method="post" action="formulaireProcessing.php" onsubmit="return check()"/> <br/>
