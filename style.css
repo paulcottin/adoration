@@ -1,0 +1,186 @@
+html{
+	background-color: #00A2E8;
+	font-family: 'segoe UI';
+	color: white;
+}
+
+nav{
+	display: inline-block;
+}
+
+nav ul{
+	list-style-type: none;
+}
+
+nav li{
+	display: inline-block;
+	margin-right: 10px;
+}
+
+.centerWhite70{
+	text-align: center;
+	font-size: 70px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 10px;
+	margin-bottom: 40px;	
+}
+
+.centerWhite40{
+	text-align: center;
+	font-size: 40px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 10px;
+	margin-bottom: 40px;	
+}
+
+#cercle{
+	background:#004377;
+	border-radius:40%;
+	width:160px;
+	height:160px; 
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.align34{
+	text-align: center;
+	font-size: 34px;
+}
+
+.align40{
+	font-size: 40px;
+	text-align: center;
+	margin-top: 30px;
+	margin-bottom: 30px;	
+}
+
+.align{
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+}
+
+.cadre{
+	margin-top: 30px;
+	margin-left: auto;
+	margin-right: 40px;
+	text-align:center;
+	height: 400px;
+	width: 20px;
+	border: solid 2px;
+	border-color: #004377;
+}
+
+#barre{
+	height: 0px;
+	width: 20px;
+	background-color: #004377;
+}
+
+.texte{
+	text-align: center;
+	font-size: 26px;
+	font-weight: bold;
+}
+
+.button{
+	color: white;
+	font-size: 30px;	
+	border: 1px solid #646464;
+	background:#004377;
+	text-align: center;
+	margin: 0 auto;
+	margin: 10px;
+	border-radius: 10px;
+	padding-right:7px; 
+	padding-left:7px; 
+	padding-top:4px; 
+	padding-bottom:4px; 
+	text-decoration:none;
+	cursor: pointer;
+}
+
+.commentaire{
+	font-size: 19px;
+	border: 1px dotted;
+	width: 800px;
+}
+
+.commentairesPrecedents{
+	float: left;
+	width: 80%;
+}
+
+.nbCommentaires{
+	float: left;
+	width: 80%;
+	text-align: right;
+}
+
+.questionButton{
+	vertical-align: top;
+	margin-left: 20%;
+	color: white;
+	font-size: 30px;
+	width: 300px;
+	height: 140px;
+	border: 1px solid #646464;
+	background:#004377;
+	text-align: center;
+	margin: 0.4% auto;
+	border-radius:4%;
+	cursor: pointer;
+	white-space: pre-wrap;       /* css-3 */
+	white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+	white-space: -pre-wrap;      /* Opera 4-6 */
+	white-space: -o-pre-wrap;    /* Opera 7 */
+	word-wrap: break-word;       /* Internet Explorer 5.5+ */ 
+	cursor:pointer;
+}
+
+.infoForm{
+	display: inline-block;
+	text-align: right;
+}
+
+.text20{
+	font-size: 20px;
+	text-align: left;
+	color: white;
+}
+
+.question{
+	vertical-align: top;
+	color: white;
+	font-size: 20px;
+	width: 600px;
+	height: 300px;
+	border: 1px solid #646464;
+	background:#004377;
+	text-align: center;
+	margin: 0.4% auto;
+	border-radius:10%;
+}
+
+.tableTitle{
+	padding: 4px 10px 4px 10px;
+	margin: 4px 10px 4px 10px;
+	font-weight: bold;
+	text-align: center;
+}
+
+.tableItem{
+	padding: 4px 10px 4px 10px;
+	margin: 4px 10px 4px 10px;
+	text-align: center;
+	border-bottom: solid 1px;
+}
+
+.connectForm{
+	padding: 10px 10px 10px 10px;
+	margin: 10px 10px 10px 10px;
+}
