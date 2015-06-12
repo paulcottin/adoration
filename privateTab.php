@@ -7,17 +7,18 @@ $moins = 0;
 $now = new DateTime();
 $semaine = new DateInterval("P7D");
 
-if (isset($_POST['plus'])) {
-	echo("plus existe");
-	$plus = $_POST['plus'];
+if (isset($_GET['plus'])) {
+	$plus = $_GET['plus'];
+	$plus = $plus+0;
 	for ($i=0; $i < $plus; $i++) { 
-		$semaine->add($semaine);
+		$now->add($semaine);
 	}
 }
-elseif (isset($_POST['moins'])) {
-	$moins = $_POST['moins'];
+elseif (isset($_GET['moins'])) {
+	$moins = $_GET['moins'];
+	$moins = $moins+0;
 	for ($i=0; $i < $moins; $i++) { 
-		$semaine->sub($semaine);
+		$now->sub($semaine);
 	}
 }
 	
@@ -53,11 +54,38 @@ $stmt = $db->prepare($sql);
 		    	$current->setDate($lundi->format("Y"), $lundi->format("m"), $lundi->format("d"));
 		    	$current->add(new DateInterval("P6D"));
 		    	?>
-				<caption> 
-				  	
-				  	<a href="privateTab.php?moins="<?php echo($moins-1) ?>><img src="images/flecheGauche.jpg" width="20" height="20"></a>
+				<caption>
+				  	<?php
+				  	//Détermination du bon nombre de plus/moins pour les liens des boutons
+				  	if ($plus > 0) {
+				  		?>
+				  		<a href="privateTab.php?plus=<?php $plus--; echo($plus); ?>"><img src="images/flecheGauche.jpg" width="20" height="20"/></a>
+				  		<?php
+				  		$plus++;
+				  	}
+				  	elseif ($plus == 0) {
+				  		?>
+				  		<a href="privateTab.php?moins=<?php $moins++; echo($moins); ?>"><img src="images/flecheGauche.jpg" width="20" height="20"/></a>
+				  		<?php
+				  		$moins--;
+				  	}
+				  	?>
 				  	Semaine du <?php echo($lundi->format("d/m/Y"));?> au <?php echo($current->format("d/m/Y"));?> 
-				  	<a href="privateTab.php?plus="<?php echo($plus+1) ?>><img src="images/flecheDroite.jpg" width="20" height="20"></a>
+				  	<?php
+			  		if ($moins > 0) {
+			  			?>
+			  			<a href="privateTab.php?moins=<?php $moins--; echo($moins); ?>"><img src="images/flecheDroite.jpg" width="20" height="20"/></a>
+			  			<?php
+			  			$moins++;
+			  		}
+			  		elseif ($moins == 0) {
+			  			?>
+			  			<a href="privateTab.php?plus=<?php $plus++; echo($plus); ?>"><img src="images/flecheDroite.jpg" width="20" height="20"/></a>
+			  			<?php
+			  			$plus--;
+			  		}
+				  	?>
+				  	<a href="privateTab.php" style="color:white; float:right;">Aujourd'hui</a>
 				</caption> 
 			   	<tr> 
 					<th></th> 
