@@ -38,6 +38,10 @@ $creneaux = array();
 for ($i=0; $i < sizeof($data); $i++) { 
 	array_push($creneaux, new DateTime($data[$i][0]));
 }
+
+//Pour afficher les créneaux
+$sql = "SELECT id FROM creneaux WHERE user_id = ?;";
+$stmt = $db->prepare($sql);
 ?>
 
 <html>
@@ -68,7 +72,7 @@ for ($i=0; $i < sizeof($data); $i++) {
 
 	    				<input type="button" class="button" value="Annuler" onclick="document.location.href = 'privateTab.php'">
 	    				<input type="submit" class="button" value="Enregistrer"/>
-	    			</form>
+	    			
     			</div>
     		</span>
     		<span style="float:center;">
@@ -80,13 +84,18 @@ for ($i=0; $i < sizeof($data); $i++) {
 	    				<?php 
 	    				$c = getCreneaux($creneaux);
 	    				for ($i=0; $i < sizeof($c['jour']); $i++) { 
-	    					echo(" - Le ".$c['jour'][$i]." à ".$c['heure'][$i]."h<br/>");
+	    					echo(" - Le ".$c['jour'][$i]." à ".$c['heure'][$i]."h, ");
+	    					?>
+	    					changer en 
+	    					<input type="datetime-local" class="connectForm" id ="date" name="date" default=""/> <br/>
+	    					<?php
 	    				}
 	    				?>
 	    			</p>
     			</div>
     		</span>
     	</div>
+    	</form>
     </body>
 </html>
 
@@ -146,5 +155,9 @@ function getDay($date){
 
 function getHour($date){
 	return $date->format('H');
+}
+
+function setDate($string, $stmt){
+
 }
 ?>

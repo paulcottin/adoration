@@ -43,6 +43,12 @@ $stmt = $db->prepare($sql);
         <meta charset="utf-8" />
         <link rel="stylesheet" type="text/css" href="style.css">
         <title>Inscription adoration NDL</title>
+        <script type="text/javascript">
+        	function edition(){
+			    options = "Width=700,Height=700" ;
+			    window.open( "edition.php", "edition", options ) ;
+		    }
+        </script>
     </head>
     <script type="text/javascript">
 
@@ -132,7 +138,7 @@ $stmt = $db->prepare($sql);
 			<span style="float:center; padding:10px;">
 					<div>
 						<!-- <input type="button" class="button" value="Envoyer un mail" onclick="afficher('mail');"/> -->
-						<a href="listeMail.php" class="button">Envoyer un mail</a>
+						<input type="button" class="button" value="Envoyer un mail" onclick="document.location.href='listeMail.php'"/>
 						<br/>
 						<div id="mail" hidden>
 							<?php include("listeMail.php"); ?>			
@@ -142,6 +148,8 @@ $stmt = $db->prepare($sql);
 						<div id="adorateurs" hidden>
 							<?php include("liste.php"); ?>
 						</div>
+						<input type="button" class="button" value="Imprimer le planning" onclick="edition();return false;"/>
+						<br/>
 					</div>
 			</span>
 		</div>
