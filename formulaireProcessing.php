@@ -17,7 +17,7 @@ try{
 }
 
 //On vérifie que la personne n'est pas déjà inscrite => pas déjà l'adresse mail
-$sql = "SELECT count(id) FROM utilisateurs WHERE email LIKE '?' ";
+$sql = "SELECT count(id) FROM utilisateurs WHERE email LIKE ? ";
 
 $stmt = $db->prepare($sql);
 $stmt->execute(array($email));

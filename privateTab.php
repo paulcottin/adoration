@@ -44,6 +44,17 @@ $stmt = $db->prepare($sql);
         <link rel="stylesheet" type="text/css" href="style.css">
         <title>Inscription adoration NDL</title>
     </head>
+    <script type="text/javascript">
+
+    	function afficher (id) {
+    		var obj = document.getElementById(id);
+    		if (obj.hidden) {
+    			obj.hidden = false;
+    		}else{
+    			obj.hidden = true;
+    		}
+    	}
+    </script>
     <body>
     	<div>
     		<span style="float:left">
@@ -118,8 +129,20 @@ $stmt = $db->prepare($sql);
 				?>
 				</table> 
 			</span>
-			<span style="float:center">
-								
+			<span style="float:center; padding:10px;">
+					<div>
+						<!-- <input type="button" class="button" value="Envoyer un mail" onclick="afficher('mail');"/> -->
+						<a href="listeMail.php" class="button">Envoyer un mail</a>
+						<br/>
+						<div id="mail" hidden>
+							<?php include("listeMail.php"); ?>			
+						</div>
+						<input type="button" class="button" value="Liste des adorateurs" onclick="afficher('adorateurs');"/>
+						<br/>
+						<div id="adorateurs" hidden>
+							<?php include("liste.php"); ?>
+						</div>
+					</div>
 			</span>
 		</div>
     </body>

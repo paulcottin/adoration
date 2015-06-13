@@ -12,6 +12,7 @@
     </p>
     <p style="text-align:center">
     <a class="button" href="formulaire.php" style="color:white;">S'inscrire pour un autre créneau</a>
+    <a class="button" href="creneaux.php" style="color:white;">Voir les créneaux</a>
     </p>
     </body>
 </html>

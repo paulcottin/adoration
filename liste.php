@@ -10,7 +10,7 @@ try{
 }
 
 //récupération des utilisateurs
-$sql = "SELECT prenom, nom, email, telephone FROM utilisateurs;";
+$sql = "SELECT prenom, nom, email, telephone, id FROM utilisateurs;";
 $stmt = $db->prepare($sql);
 $stmt->execute();
 $data = $stmt->fetchAll();
@@ -22,40 +22,17 @@ $data = $stmt->fetchAll();
         <title>Inscription adoration NDL</title>
     </head>
     <script type="text/javascript">
-
-    	function selectAll(){
-    		var inputs = document.getElementById('form').getElementsByTagName('input');
-    		for(i = 0; i < inputs.length; i++) {
-    			if(inputs[i].type == 'checkbox'){
-    				if (inputs[i].checked) {
-    					inputs[i].checked = false;
-    				}else{
-    					inputs[i].checked = true;
-    				}
-    				
-    			}
-    		}	
-    		var b = document.getElementById('selectAll');
-    		if (b.value = 'Sélectionner tout') {
-    			b.value = 'Déselectionner tout';
-    		}
-    		else if (b.value = 'Déselectionner tout'){
-    			b.value = 'Sélectionner tout';
-    		}
-    	}
+        function redirect (id) {
+            document.location.href = "fiche.php?id="+id;
+        }
     </script>
     <body>
-    	 <div style="overflow:scroll; border:#000000 1px solid; width:40%; height:50%">
-    	 	<form id="form">
-    	 		<?php
-	    		for ($i=0; $i < sizeof($data); $i++) { 
-	    			echo('<input type="checkbox"/>'.$data[$i][0].' '.$data[$i][1].', <a href="'.$data[$i][2].'" style="color:white">'.$data[$i][2].'</a> - '.$data[$i][3].'<br/><hr/>');
-	    		}
-	    		?>
-    	 	</form>
+    	 <div style="overflow:scroll; border:#FFFFFF 1px solid; width:40%; height:50%">
+	 		<?php
+    		for ($i=0; $i < sizeof($data); $i++) { 
+    			echo('<input type="button" onclick="redirect('.$data[$i][4].')" style="background:none; border:none; color:white; font:20px bold;" value="&nbsp - '.$data[$i][0].' '.$data[$i][1].', '.$data[$i][2].' ; '.$data[$i][3].'"/><br/><hr/>');
+    		}
+    		?>
     	</div>
-    	<p>
-    		<input id="selectAll" type="button" value="Sélectionner tout" onclick="selectAll();"/>
-    	</p>
     </body>
 </html>
