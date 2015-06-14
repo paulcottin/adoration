@@ -44,7 +44,10 @@ $stmt = $db->prepare($sql);
     	<div>
     	<span style="float:left">
     		<table border="1px"> 
-				<caption> Voici le titre du tableau </caption> 
+				<caption> En vert, il y a au moins une personne <br/>
+				En rouge, il faut quelqu'un<br/>
+				En noir, il n'y a pas d'adoration cette heure là
+				 </caption> 
 			   	<tr> 
 					<th></th> 
 					<?php
@@ -83,7 +86,7 @@ $stmt = $db->prepare($sql);
     			<input type="button" class="button" style="text-align:center" value="S'inscrire" onclick="afficherForm()"/>
     		</div>
     		<div id="formulaire">
-    			<?php include 'formulaireInséré.php'; ?>
+    			<?php include 'formInsere.php'; ?>
     		</div>
     	</span>
     	</div>

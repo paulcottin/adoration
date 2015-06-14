@@ -46,7 +46,12 @@ $stmt = $db->prepare($sql);
         <script type="text/javascript">
         	function edition(){
 			    options = "Width=700,Height=700" ;
-			    window.open( "edition.php", "edition", options ) ;
+			    var date = "";
+			    <?php 
+			    	if ($plus > 0) {echo("date = 'plus=".$plus."';");}
+			    	elseif ($moins > 0) {echo("date = 'moins=".$moins."';");}
+			    ?>
+			    window.open( "edition.php?"+date, "edition", options ) ;
 		    }
         </script>
     </head>
@@ -149,6 +154,8 @@ $stmt = $db->prepare($sql);
 							<?php include("liste.php"); ?>
 						</div>
 						<input type="button" class="button" value="Imprimer le planning" onclick="edition();return false;"/>
+						<br/>
+						<input type="button" class="button" value="Ré-inscrire" onclick=""/>
 						<br/>
 					</div>
 			</span>

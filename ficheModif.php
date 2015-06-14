@@ -28,20 +28,21 @@ $pers = array('id' => $data[0],
 			);
 
 //On obtient tous les créneaux qu'elle a
-$sql = "SELECT date FROM `creneaux` WHERE user_id = ?;";
+$sql = "SELECT id, date FROM `creneaux` WHERE user_id = ?;";
 
 $stmt = $db->prepare($sql);
 $stmt->execute(array($pers['id']));
 
 $data = $stmt->fetchAll();
-$creneaux = array();
-for ($i=0; $i < sizeof($data); $i++) { 
-	array_push($creneaux, new DateTime($data[$i][0]));
-}
 
-//Pour afficher les créneaux
-$sql = "SELECT id FROM creneaux WHERE user_id = ?;";
-$stmt = $db->prepare($sql);
+$ids = array();
+$creneau = array();
+$creneaux = array('creneau' => $creneau, 'ids' => $ids);
+
+for ($i=0; $i < sizeof($data); $i++) { 
+	$creneaux['creneau'][] = new DateTime($data[$i][1]);
+	$creneaux['ids'][] = $data[$i][0];
+}
 ?>
 
 <html>
@@ -51,9 +52,9 @@ $stmt = $db->prepare($sql);
         <title>Inscription adoration NDL</title>
     </head>
     <script type="text/javascript">
-    	function supprimer () {
-    		if (confirm('Êtes-vous sûr de vouloir supprimer cet adorateur ?')){
-    			document.location.href = "supprimerAdoProcessing.php?id=<?php echo $pers['id'] ?>";
+    	function supprimer (id) {
+    		if (confirm('Êtes-vous sûr de vouloir supprimer ce créneau ? \n\n(Pensez à sauvegarder vos modifications en cours avant la suppression, sinon elles seront perdues)')){
+    			document.location.href = "supprimerCreneauProcessing.php?id="+id+"&user_id=<?php echo($id); ?>";
     		}
     	}
     </script>
@@ -70,7 +71,7 @@ $stmt = $db->prepare($sql);
 	    				Téléphone : <input type="text" class="connectForm" name="telephone" value="<?php echo($pers['telephone']); ?>"/> <br/>
 	    				Portable : <input type="text" class="connectForm" name="portable" value="<?php echo($pers['portable']); ?>"/><br/>
 
-	    				<input type="button" class="button" value="Annuler" onclick="document.location.href = 'privateTab.php'">
+	    				<input type="button" class="button" value="Annuler" onclick="document.location.href = 'fiche.php?id=<?php echo($id); ?>'">
 	    				<input type="submit" class="button" value="Enregistrer"/>
 	    			
     			</div>
@@ -83,14 +84,25 @@ $stmt = $db->prepare($sql);
 	    			<p class="text20">
 	    				<?php 
 	    				$c = getCreneaux($creneaux);
-	    				for ($i=0; $i < sizeof($c['jour']); $i++) { 
-	    					echo(" - Le ".$c['jour'][$i]." à ".$c['heure'][$i]."h, ");
-	    					?>
-	    					changer en 
-	    					<input type="datetime-local" class="connectForm" id ="date" name="date" default=""/> <br/>
-	    					<?php
+	    				$cpt = 0;
+	    				for ($i=0; $i < sizeof($c['string']); $i++) { 
+	    					if ($c['hidden'][$i]) {
+	    						?>
+	    						<input type="datetime-local" class="connectForm" name="date_<?php echo($c['ids'][$i]);?>" id="date" hidden value="<?php echo($c['string'][$i]);?>"/> 
+	    						<?php
+	    					}
+	    					else{
+	    						?>
+	    						<input type="datetime-local" class="connectForm" name="date_<?php echo($c['ids'][$i]);?>" id="date" value="<?php echo($c['string'][$i]);?>" label=""/>  
+	    						(Le <?php echo($c['jour'][$cpt]); ?> à <?php echo($c['heure'][$cpt]); ?>h)
+	    						<a style="float:right;" onclick="supprimer(<?php echo($c['ids'][$i]);?>);">Supprimer le créneau</a>
+	    						<br/>
+	    						<?php
+	    						$cpt++;
+	    					}
 	    				}
 	    				?>
+	    				<input type="text" hidden name="size" value="<?php echo($c['max']); ?>" />
 	    			</p>
     			</div>
     		</span>
@@ -103,21 +115,32 @@ $stmt = $db->prepare($sql);
 function getCreneaux($creneaux){
 	$jour = array();
 	$heure = array();
+	$string = array();
+	$ids = array();
+	$hidden = array();
 
-	for ($i=0; $i < sizeof($creneaux); $i++) { 
-		if (array_search(getDay($creneaux[$i]), $jour) !== false) {
-			if (array_search(getHour($creneaux[$i]), $heure) === false) {
-				array_push($jour, getDay($creneaux[$i]));
-				array_push($heure, getHour($creneaux[$i]));
+	for ($i=0; $i < sizeof($creneaux['creneau']); $i++) { 
+		if (array_search(getDay($creneaux['creneau'][$i]), $jour) !== false) {
+			if (array_search(getHour($creneaux['creneau'][$i]), $heure) === false) {
+				$hidden[] = false;
+				$jour[] = getDay($creneaux['creneau'][$i]);
+				$heure[] = getHour($creneaux['creneau'][$i]);
+			}
+			else{
+				$hidden[] = true;
 			}
 		}
 		else{
-			$jour[] = getDay($creneaux[$i]);
-			$heure[] = getHour($creneaux[$i]);
+			$hidden[] = false;
+			$jour[] = getDay($creneaux['creneau'][$i]);
+			$heure[] = getHour($creneaux['creneau'][$i]);
 		}
+		$string[] = setDate($creneaux['creneau'][$i]);
+		$ids[] = $creneaux['ids'][$i];
 	}
 
-	$r = array('jour' => $jour, 'heure' => $heure);
+
+	$r = array('string' => $string, 'ids' => $ids, 'hidden' => $hidden, 'jour' => $jour, 'heure' => $heure, 'max' => max($ids));
 	return $r;
 }
 
@@ -157,7 +180,7 @@ function getHour($date){
 	return $date->format('H');
 }
 
-function setDate($string, $stmt){
-
+function setDate($date){
+	return str_replace(" ", "T", $date->format("Y-m-d H:i"));
 }
 ?>
