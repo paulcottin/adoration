@@ -28,7 +28,7 @@ $jour = new DateInterval("P1D");
 //Création de la liaison à la base de données
 $db;
 try{
-	$db = new PDO('mysql:host=localhost;dbname=adoration', 'root', 'root');
+	$db = new PDO('mysql:host=sql2.olympe.in;dbname=elghblxo', 'elghblxo', 'mot_de_passe_BDD_ado');
 }catch(Exeception $e){
 	echo("erreur db");
 	die('Erreur : ' . $e->getMessage());
@@ -41,7 +41,7 @@ $stmt = $db->prepare($sql);
 <html>
     <head>
         <meta charset="utf-8" />
-        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" type="text/css" href="../style.css">
         <title>Inscription adoration NDL</title>
         <script type="text/javascript">
         	function edition(){
@@ -81,13 +81,13 @@ $stmt = $db->prepare($sql);
 				  	//Détermination du bon nombre de plus/moins pour les liens des boutons
 				  	if ($plus > 0) {
 				  		?>
-				  		<a href="privateTab.php?plus=<?php $plus--; echo($plus); ?>"><img src="images/flecheGauche.jpg" width="20" height="20"/></a>
+				  		<a href="privateTab.php?plus=<?php $plus--; echo($plus); ?>"><img src="../images/flecheGauche.jpg" width="20" height="20"/></a>
 				  		<?php
 				  		$plus++;
 				  	}
 				  	elseif ($plus == 0) {
 				  		?>
-				  		<a href="privateTab.php?moins=<?php $moins++; echo($moins); ?>"><img src="images/flecheGauche.jpg" width="20" height="20"/></a>
+				  		<a href="privateTab.php?moins=<?php $moins++; echo($moins); ?>"><img src="../images/flecheGauche.jpg" width="20" height="20"/></a>
 				  		<?php
 				  		$moins--;
 				  	}
@@ -96,13 +96,13 @@ $stmt = $db->prepare($sql);
 				  	<?php
 			  		if ($moins > 0) {
 			  			?>
-			  			<a href="privateTab.php?moins=<?php $moins--; echo($moins); ?>"><img src="images/flecheDroite.jpg" width="20" height="20"/></a>
+			  			<a href="privateTab.php?moins=<?php $moins--; echo($moins); ?>"><img src="../images/flecheDroite.jpg" width="20" height="20"/></a>
 			  			<?php
 			  			$moins++;
 			  		}
 			  		elseif ($moins == 0) {
 			  			?>
-			  			<a href="privateTab.php?plus=<?php $plus++; echo($plus); ?>"><img src="images/flecheDroite.jpg" width="20" height="20"/></a>
+			  			<a href="privateTab.php?plus=<?php $plus++; echo($plus); ?>"><img src="../images/flecheDroite.jpg" width="20" height="20"/></a>
 			  			<?php
 			  			$plus--;
 			  		}
@@ -156,6 +156,8 @@ $stmt = $db->prepare($sql);
 						<input type="button" class="button" value="Imprimer le planning" onclick="edition();return false;"/>
 						<br/>
 						<input type="button" class="button" value="Ré-inscrire" onclick=""/>
+						<br/>
+						<input type="button" class="button" value="Planning public" onclick="document.location.href='../creneaux.php'"/>
 						<br/>
 					</div>
 			</span>

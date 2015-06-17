@@ -28,7 +28,7 @@ $jour = new DateInterval("P1D");
 //Création de la liaison à la base de données
 $db;
 try{
-    $db = new PDO('mysql:host=localhost;dbname=adoration', 'root', 'root');
+    $db = new PDO('mysql:host=sql2.olympe.in;dbname=elghblxo', 'elghblxo', 'mot_de_passe_BDD_ado');
 }catch(Exeception $e){
     echo("erreur db");
     die('Erreur : ' . $e->getMessage());

@@ -1,4 +1,4 @@
 <?php
-$redirection = "Location: privateTab.php";
+$redirection = "Location: creneaux.php";
 header($redirection);
 ?>

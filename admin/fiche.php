@@ -6,7 +6,7 @@ if (isset($_GET['id'])) {
 
 $db;
 try{
-	$db = new PDO('mysql:host=localhost;dbname=adoration', 'root', 'root');
+	$db = new PDO('mysql:host=sql2.olympe.in;dbname=elghblxo', 'elghblxo', 'mot_de_passe_BDD_ado');
 }catch(Exeception $e){
 	die('Erreur : ' . $e->getMessage());
 }
@@ -43,7 +43,7 @@ for ($i=0; $i < sizeof($data); $i++) {
 <html>
     <head>
         <meta charset="utf-8" />
-        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" type="text/css" href="../style.css">
         <title>Inscription adoration NDL</title>
     </head>
     <script type="text/javascript">

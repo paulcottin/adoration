@@ -3,7 +3,7 @@
 //Création de la liaison à la base de données
 $db;
 try{
-	$db = new PDO('mysql:host=localhost;dbname=adoration', 'root', 'root');
+	$db = new PDO('mysql:host=sql2.olympe.in;dbname=elghblxo', 'elghblxo', 'mot_de_passe_BDD_ado');
 }catch(Exeception $e){
 	echo("erreur db");
 	die('Erreur : ' . $e->getMessage());
@@ -18,7 +18,7 @@ $data = $stmt->fetchAll();
 <html>
     <head>
         <meta charset="utf-8" />
-        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" type="text/css" href="../style.css">
         <title>Inscription adoration NDL</title>
     </head>
     <script type="text/javascript">

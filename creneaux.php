@@ -2,7 +2,7 @@
 
 $db;
 try{
-	$db = new PDO('mysql:host=localhost;dbname=adoration', 'root', 'root');
+	$db = new PDO('mysql:host=sql2.olympe.in;dbname=elghblxo', 'elghblxo', 'mot_de_passe_BDD_ado');
 }catch(Exeception $e){
 	echo("erreur db");
 	die('Erreur : ' . $e->getMessage());
@@ -42,6 +42,7 @@ $stmt = $db->prepare($sql);
     </script>
     <body onload="init();">
     	<div>
+    	<a href="connexion.php" style="float:left">Connexion</a>
     	<span style="float:left">
     		<table border="1px"> 
 				<caption> En vert, il y a au moins une personne <br/>
