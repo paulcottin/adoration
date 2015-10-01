@@ -4,12 +4,7 @@ if (isset($_GET['id'])) {
 	$id = $_GET['id'];
 }
 
-$db;
-try{
-	$db = new PDO('mysql:host=sql2.olympe.in;dbname=elghblxo', 'elghblxo', 'mot_de_passe_BDD_ado');
-}catch(Exeception $e){
-	die('Erreur : ' . $e->getMessage());
-}
+include '../x.php';
 
 //On prend les informations de la personne grâce à son mail
 $sql = "SELECT id, nom, prenom, adresse, telephone, portable, email FROM utilisateurs WHERE id = ?;";
@@ -86,12 +81,7 @@ for ($i=0; $i < sizeof($data); $i++) {
 	    				$c = getCreneaux($creneaux);
 	    				$cpt = 0;
 	    				for ($i=0; $i < sizeof($c['string']); $i++) { 
-	    					if ($c['hidden'][$i]) {
-	    						?>
-	    						<input type="datetime-local" class="connectForm" name="date_<?php echo($c['ids'][$i]);?>" id="date" hidden value="<?php echo($c['string'][$i]);?>"/> 
-	    						<?php
-	    					}
-	    					else{
+	    					if (!$c['hidden'][$i]) {
 	    						?>
 	    						<input type="datetime-local" class="connectForm" name="date_<?php echo($c['ids'][$i]);?>" id="date" value="<?php echo($c['string'][$i]);?>" label=""/>  
 	    						(Le <?php echo($c['jour'][$cpt]); ?> à <?php echo($c['heure'][$cpt]); ?>h)

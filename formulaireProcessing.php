@@ -1,5 +1,8 @@
 <?php
 session_start();
+
+include 'x.php';
+
 $nom = $_POST['nom'];
 $prenom = $_POST['prenom'];
 $date = $_POST['date'];
@@ -9,12 +12,7 @@ $tel = $_POST['telephone'];
 $portable = $_POST['portable'];
 $repetition = $_POST['repetition'];
 
-$db;
-try{
-	$db = new PDO('mysql:host=sql2.olympe.in;dbname=elghblxo', 'elghblxo', 'mot_de_passe_BDD_ado');
-}catch(Exeception $e){
-	die('Erreur : ' . $e->getMessage());
-}
+
 
 //On vérifie que la personne n'est pas déjà inscrite => pas déjà l'adresse mail
 $sql = "SELECT count(id) FROM utilisateurs WHERE email LIKE ? ";

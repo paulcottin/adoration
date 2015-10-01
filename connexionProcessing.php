@@ -7,12 +7,7 @@ if (isset($_POST['email']) && isset($_POST['mdp'])) {
 
 $login = $_GET['login'];
 
-$db;
-try{
-	$db = new PDO('mysql:host=sql2.olympe.in;dbname=elghblxo', 'elghblxo', 'mot_de_passe_BDD_ado');
-}catch(Exeception $e){
-	die('Erreur : ' . $e->getMessage());
-}
+include 'x.php';
 
 //Si c'est une connexion
 if ($login == "1") {
@@ -22,8 +17,8 @@ if ($login == "1") {
 
 	$mdp_bd = $stmt->fetch()[0];
 
-	/*if (password_verify($mdp, $mdp_bd)) {*/
-	if ($mdp == $mdp_bd) {
+	if (password_verify($mdp, $mdp_bd)) {
+	/*if ($mdp == $mdp_bd) {*/
 		
 		$sql = "SELECT id, prenom, nom FROM utilisateurs WHERE email=?";
 		$stmt = $db->prepare($sql);

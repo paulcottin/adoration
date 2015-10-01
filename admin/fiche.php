@@ -4,12 +4,7 @@ if (isset($_GET['id'])) {
 	$id = $_GET['id'];
 }
 
-$db;
-try{
-	$db = new PDO('mysql:host=sql2.olympe.in;dbname=elghblxo', 'elghblxo', 'mot_de_passe_BDD_ado');
-}catch(Exeception $e){
-	die('Erreur : ' . $e->getMessage());
-}
+include '../x.php';
 
 //On prend les informations de la personne grâce à son mail
 $sql = "SELECT id, nom, prenom, adresse, telephone, portable, email FROM utilisateurs WHERE id = ?;";

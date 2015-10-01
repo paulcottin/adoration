@@ -1,13 +1,7 @@
 <?php session_start(); 
 
 //Création de la liaison à la base de données
-$db;
-try{
-	$db = new PDO('mysql:host=sql2.olympe.in;dbname=elghblxo', 'elghblxo', 'mot_de_passe_BDD_ado');
-}catch(Exeception $e){
-	echo("erreur db");
-	die('Erreur : ' . $e->getMessage());
-}
+include '../x.php';
 
 //récupération des utilisateurs
 $sql = "SELECT prenom, nom, email, telephone FROM utilisateurs;";

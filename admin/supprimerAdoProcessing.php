@@ -5,12 +5,7 @@ if (isset($_GET['id'])) {
 	$id = $_GET['id'];
 }
 
-$db;
-try{
-	$db = new PDO('mysql:host=sql2.olympe.in;dbname=elghblxo', 'elghblxo', 'mot_de_passe_BDD_ado');
-}catch(Exeception $e){
-	die('Erreur : ' . $e->getMessage());
-}
+include '../x.php';
 
 //Suppression de l'adorateur
 $sql = "DELETE FROM utilisateurs WHERE id = ? ;";

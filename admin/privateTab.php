@@ -26,13 +26,7 @@ $lundi = getLundi($now);
 $jour = new DateInterval("P1D");
 
 //Création de la liaison à la base de données
-$db;
-try{
-	$db = new PDO('mysql:host=sql2.olympe.in;dbname=elghblxo', 'elghblxo', 'mot_de_passe_BDD_ado');
-}catch(Exeception $e){
-	echo("erreur db");
-	die('Erreur : ' . $e->getMessage());
-}
+include '../x.php';
 
 //Préparation de la requete pour chaque créneaux horaire :
 $sql = "SELECT prenom, nom FROM utilisateurs WHERE id IN (SELECT user_id FROM creneaux WHERE date = ?)";

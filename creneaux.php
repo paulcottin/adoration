@@ -1,12 +1,6 @@
 <?php session_start(); 
 
-$db;
-try{
-	$db = new PDO('mysql:host=sql2.olympe.in;dbname=elghblxo', 'elghblxo', 'mot_de_passe_BDD_ado');
-}catch(Exeception $e){
-	echo("erreur db");
-	die('Erreur : ' . $e->getMessage());
-}
+include 'x.php';
 
 //Date actuelle
 $now = new DateTime();
