@@ -5,7 +5,8 @@ include 'x.php';
 
 $nom = $_POST['nom'];
 $prenom = $_POST['prenom'];
-$date = $_POST['date'];
+$jour = $_POST['jour'];
+$heure = $_POST['heure'];
 $adresse = $_POST['adresse'];
 $email = $_POST['email'];
 $tel = $_POST['telephone'];
@@ -30,42 +31,9 @@ if ($nb_email > 0) {
 	$stmt->execute(array($nom, $prenom, $adresse, $tel, $portable, $email));
 }
 
-$date = creerDate($date);
+//Ajout des créneaux
+$date = createDate($jour, $heure);
 
-//En fonction de la répétition on insère plusieurs fois un nouveau créneau
-$nbCreneaux = 0;
-switch ($repetition) {
-	case '1':
-		$nbCreneaux = 1;
-		break;
-	case '2s':
-		$nbCreneaux = 2;
-		break;
-	case '3s':
-		$nbCreneaux = 3;
-		break;
-	case '1m':
-		$nbCreneaux = 4;
-		break;
-	case '2m':
-		$nbCreneaux = 8;
-		break;
-	case '3m':
-		$nbCreneaux = 13;
-		break;
-	case '4m':
-		$nbCreneaux = 17;
-		break;
-	case '5m':
-		$nbCreneaux = 21;
-		break;
-	case '6m':
-		$nbCreneaux = 26;
-		break;
-	case '1a':
-		$nbCreneaux = 52;
-		break;
-}
 
 //Détermination de l'id associé au mail
 $sql = "SELECT id FROM utilisateurs WHERE email LIKE ?;";
@@ -73,28 +41,60 @@ $stmt = $db->prepare($sql);
 $stmt->execute(array($email));
 $user_id = $stmt->fetch()[0];
 
-//Création d'un interval d'une semaine
-$timeI = new DateInterval("P7D");
+//Création des données nécessaires
+$duree = new DateInterval("P100Y");
 
-//Ajout des différents créneaux
-$sql = "INSERT INTO creneaux VALUES (null, ?, ?);";
+$sql = "INSERT INTO creneaux_bis VALUES (null, ?, ?, ?, ?, ?);";
 $stmt = $db->prepare($sql);
-for ($i=0; $i < $nbCreneaux; $i++) { 
-	$stmt->execute(array($date->format("Y-m-d H:i"), $user_id));
-	$date->add($timeI);
-}
-$stmt->execute(array($date->format("Y-m-d H:i"), $user_id));
+if ($_POST['repetition'] == "toujours")
+	$stmt->execute(array($date->format("Y-m-d"), $date->add($duree)->format("Y-m-d"), $jour, $heure, $user_id));
+else
+	$stmt->execute(array($date->format("Y-m-d"), $date->format("Y-m-d"), $jour, $heure, $user_id));
 
 //Redirection
 $redirection = "Location: thanks.php";
 header($redirection);
 
-
-function creerDate($string){
-	$s = str_replace("T", " ", $string);
-	$date = DateTime::createFromFormat('Y-m-d H:i', $s);
-	$heure = split("/", split(" ", $date->format("d/m/Y H/i"))[1])[0];
-	$date->setTime($heure+0, 0);
-	return $date;
+function createDate($jour, $heure) {
+	$dateActuelle = new DateTime();
+	$aDay = new DateInterval("P1D");
+	while (getDay($dateActuelle) != $jour) {
+		$dateActuelle->add($aDay);
+	}
+	$dateActuelle->setTime($heure+0, 0);
+	return $dateActuelle;
 }
+
+function getDay($date){
+	$s = $date->format("D");
+	$day = "";
+	switch ($s) {
+		case 'Mon':
+			$day = "Lundi";
+			break;
+		case 'Tue':
+			$day = "Mardi";
+			break;
+		case 'Wed':
+			$day = "Mercredi";
+			break;
+		case 'Thu':
+			$day = "Jeudi";
+			break;
+		case 'Fri':
+			$day = "Vendredi";
+			break;
+		case 'Sat':
+			$day = "Samedi";
+			break;
+		case 'Sun':
+			$day = "Dimanche";
+			break;
+		default:
+			$day = $s;
+			break;
+	}
+	return $day;
+}
+
 ?>

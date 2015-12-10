@@ -1,4 +1,5 @@
 <?php session_start(); 
+
 //initialise variable
 $plus = 0;
 $moins = 0;
@@ -29,17 +30,14 @@ $jour = new DateInterval("P1D");
 include '../x.php';
 
 //Préparation de la requete pour chaque créneaux horaire :
-$sql = "SELECT prenom, nom FROM utilisateurs WHERE id IN (SELECT user_id FROM creneaux WHERE date = ?)";
+$sql = "SELECT prenom, nom FROM utilisateurs WHERE id IN (SELECT user_id FROM creneaux_bis WHERE date(date_debut) <= ? AND date(date_fin) > ? AND jour like ? AND heure = ?)";
 $stmt = $db->prepare($sql);
 ?>
-
 <html>
     <head>
         <meta charset="utf-8" />
         <title>Inscription adoration NDL</title>
     </head>
-    	
-    </script>
     <body>
         <div>
             <span style="float:left">
@@ -52,7 +50,7 @@ $stmt = $db->prepare($sql);
                 ?>
                 <caption>
                     Semaine du <?php echo($lundi->format("d/m/Y"));?> au <?php echo($current->format("d/m/Y"));?> 
-                </caption> 
+                </caption>
                 <tr> 
                     <th></th> 
                     <?php
@@ -86,10 +84,11 @@ $stmt = $db->prepare($sql);
             </span>
         </div>
         <script type="text/javascript">
-            window.print() ;
+            window.print();
         </script>
     </body>
 </html>
+
 
 <?php 
 //Renvoie le jour (Lundi, Mardi, ...) en fonction de la date
@@ -138,10 +137,9 @@ function getLundi($date){
 }
 
 //Renvoie le nom prénom des personnes inscrites tel jour, telle heure.
-function getPersonnes($jour, $heure, $stmt){
-    $date = $jour;
-    $jour->setTime($heure, 0);
-    $stmt->execute(array($jour->format("Y-m-d H:i")));
+function getPersonnes($date, $heure, $stmt){
+    $jour = getDay($date);
+    $stmt->execute(array($date->format("Y-m-d"), $date->format("Y-m-d"), $jour, $heure));
     $string = "";
     if (($data = $stmt->fetchAll())){
         //Si il y a plusieurs résultats

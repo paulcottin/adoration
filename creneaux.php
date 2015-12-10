@@ -1,14 +1,35 @@
 <?php session_start(); 
+//initialise variable
+$plus = 0;
+$moins = 0;
 
-include 'x.php';
-
-//Date actuelle
+//Défini quelle semaine afficher (décalage par rapport à NOW()
 $now = new DateTime();
+$semaine = new DateInterval("P7D");
+
+if (isset($_GET['plus'])) {
+	$plus = $_GET['plus'];
+	$plus = $plus+0;
+	for ($i=0; $i < $plus; $i++) { 
+		$now->add($semaine);
+	}
+}
+elseif (isset($_GET['moins'])) {
+	$moins = $_GET['moins'];
+	$moins = $moins+0;
+	for ($i=0; $i < $moins; $i++) { 
+		$now->sub($semaine);
+	}
+}
+	
 $lundi = getLundi($now);
 $jour = new DateInterval("P1D");
 
+//Création de la liaison à la base de données
+include 'x.php';
+
 //Préparation de la requete pour chaque créneaux horaire :
-$sql = "SELECT prenom, nom FROM utilisateurs WHERE id IN (SELECT user_id FROM creneaux WHERE date = ?)";
+$sql = "SELECT prenom, nom FROM utilisateurs WHERE id IN (SELECT user_id FROM creneaux_bis WHERE date(date_debut) <= ? AND date(date_fin) > ? AND jour like ? AND heure = ?)";
 $stmt = $db->prepare($sql);
 ?>
 <html>
@@ -18,9 +39,17 @@ $stmt = $db->prepare($sql);
         <title>Inscription adoration NDL</title>
     </head>
     <script type="text/javascript">
-    	
 
-		function init () {
+    	function afficher (id) {
+    		var obj = document.getElementById(id);
+    		if (obj.hidden) {
+    			obj.hidden = false;
+    		}else{
+    			obj.hidden = true;
+    		}
+    	}
+
+    	function init () {
 			var form = document.getElementById('formulaire');
 			var but = document.getElementById('inscriptionBouton');
 			form.style.display = "none";
@@ -34,20 +63,25 @@ $stmt = $db->prepare($sql);
     		but.style.display = "none";
     	}
     </script>
-    <body onload="init();">
+    <body onload="init()">
+    <a href="connexion.php" style="float:left">Connexion</a>
     	<div>
-    	<a href="connexion.php" style="float:left">Connexion</a>
-    	<span style="float:left">
-    		<table border="1px"> 
-				<caption> En vert, il y a au moins une personne <br/>
+    		<span style="float:left">
+		    	<table border="1px"> 
+		    	<caption> En vert, il y a au moins une personne <br/>
 				En rouge, il faut quelqu'un<br/>
 				En noir, il n'y a pas d'adoration cette heure là
 				 </caption> 
+		    	<?php 
+		    	//pour afficher l'intervalle de la semaine
+		    	$current = new DateTime();
+		    	$current->setDate($lundi->format("Y"), $lundi->format("m"), $lundi->format("d"));
+		    	$current->add(new DateInterval("P6D"));
+		    	?>
 			   	<tr> 
 					<th></th> 
 					<?php
 					//première ligne du tableau (jours (Lundi, Mardi, ...))
-						$current = new DateTime();
 						$current->setDate($lundi->format("Y"), $lundi->format("m"), $lundi->format("d"));
 						for ($i=0; $i < 7; $i++) { 
 							?>
@@ -74,17 +108,17 @@ $stmt = $db->prepare($sql);
 				<?php
 				}
 				?>
-			</table> 
-    	</span>
-    	<span style="float:center">
-    		<div id="inscriptionBouton">
-    			<input type="button" class="button" style="text-align:center" value="S'inscrire" onclick="afficherForm()"/>
-    		</div>
-    		<div id="formulaire">
-    			<?php include 'formInsere.php'; ?>
-    		</div>
-    	</span>
-    	</div>
+				</table> 
+			</span>
+			<span style="float:center">
+	    		<div id="inscriptionBouton">
+	    			<input type="button" class="button" style="text-align:center" value="S'inscrire" onclick="afficherForm()"/>
+	    		</div>
+	    		<div id="formulaire">
+	    			<?php include 'formulaire.php'; ?>
+	    		</div>
+	    	</span>
+		</div>
     </body>
 </html>
 
@@ -136,10 +170,9 @@ function getLundi($date){
 }
 
 //Renvoie le nom prénom des personnes inscrites tel jour, telle heure.
-function getCouleur($jour, $heure, $stmt){
-	$date = $jour;
-	$jour->setTime($heure, 0);
-	$stmt->execute(array($jour->format("Y-m-d H:i")));
+function getCouleur($date, $heure, $stmt){
+	$jour = getDay($date);
+	$stmt->execute(array($date->format("Y-m-d H:i"), $date->format("Y-m-d"), $jour, $heure));
 	$string = "red";
 	$nb = "";
 	//Si c'est un jour normal
@@ -151,10 +184,13 @@ function getCouleur($jour, $heure, $stmt){
 		}	
 	}
 	//Si c'est un jour où il n'y a pas adoration : en noir
-	if (getDay($jour) == "Dimanche" || getDay($jour) == "Lundi") {
+	if ($jour == "Dimanche" || $jour == "Lundi") {
 		$string = "black";
 	}
-	if (getDay($jour) == "Samedi" && $heure > 12) {
+	if ($jour == "Samedi" && $heure > 12) {
+		$string = "black";
+	}
+	if ($jour == "Mardi" && $heure < 8) {
 		$string = "black";
 	}
 

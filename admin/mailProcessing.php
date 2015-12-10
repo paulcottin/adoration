@@ -32,19 +32,22 @@ else{
 }
 
 //Création du header
-$header = "From: \"Adoration NDL\"paulcottin@gmail.com".$passage_ligne;
-$header.= "Reply-to: \"Adoration NDL\" paulcottin@gmail.com".$passage_ligne;
+$header = "From: \"Adoration NDL\" no-reply@adoration-ndl.fr".$passage_ligne;
+$header.= "Reply-to: \"Adoration NDL\" no-reply@adoration-ndl.fr".$passage_ligne;
 $header.= "MIME-Version: 1.0".$passage_ligne; 
 $header.= "Content-Type: multipart/alternative;".$passage_ligne." boundary=\"$boundary\"".$passage_ligne;
 
 //Création du message
 $message .= $passage_ligne.$mail.$passage_ligne;
 
-
+//Configuration du serveur de mail
+ini_set('SMTP', "smtp.gmail.com");
+ini_set('smtp_port', "465");
+ini_set('sendmail_from', "paulcottin@gmail.com");
 
 //Envoi du mail
 for ($i=0; $i < sizeof($dest); $i++) { 
-	mail($dest[$i], $sujet, $message);
+	mail($dest[$i], $sujet, $message, $header);
 }
 
 //Redirection

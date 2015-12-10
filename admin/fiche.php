@@ -23,16 +23,13 @@ $pers = array('id' => $data[0],
 			);
 
 //On obtient tous les créneaux qu'elle a
-$sql = "SELECT date FROM `creneaux` WHERE user_id = ?;";
+$sql = "SELECT jour, heure FROM `creneaux_bis` WHERE user_id = ? AND date(date_debut) <= now() AND date(date_fin) > now();";
 
 $stmt = $db->prepare($sql);
 $stmt->execute(array($pers['id']));
 
 $data = $stmt->fetchAll();
-$creneaux = array();
-for ($i=0; $i < sizeof($data); $i++) { 
-	array_push($creneaux, new DateTime($data[$i][0]));
-}
+$creneaux = $data;
 ?>
 
 <html>
@@ -44,7 +41,7 @@ for ($i=0; $i < sizeof($data); $i++) {
     <script type="text/javascript">
     	function supprimer () {
     		if (confirm('Êtes-vous sûr de vouloir supprimer cet adorateur ?')){
-    			document.location.href = "supprimerAdoProcessing.php?id=<?php echo $pers['id'] ?>";
+    			document.location.href = "supprimerAdoProcessing_bis.php?id=<?php echo $pers['id'] ?>";
     		}
     	}
     </script>
@@ -71,9 +68,8 @@ for ($i=0; $i < sizeof($data); $i++) {
 	    			</p>
 	    			<p class="text20">
 	    				<?php 
-	    				$c = getCreneaux($creneaux);
-	    				for ($i=0; $i < sizeof($c['jour']); $i++) { 
-	    					echo(" - Le ".$c['jour'][$i]." à ".$c['heure'][$i]."h<br/>");
+	    				for ($i=0; $i < sizeof($creneaux); $i++) { 
+	    					echo(" - Le ".$creneaux[$i]['jour']." à ".$creneaux[$i]['heure']."h<br/>");
 	    				}
 	    				?>
 	    			</p>
@@ -83,62 +79,3 @@ for ($i=0; $i < sizeof($data); $i++) {
     	<a href="privateTab.php">Retour aux créneaux</a>
     </body>
 </html>
-
-<?php
-function getCreneaux($creneaux){
-	$jour = array();
-	$heure = array();
-
-	for ($i=0; $i < sizeof($creneaux); $i++) { 
-		if (array_search(getDay($creneaux[$i]), $jour) !== false) {
-			if (array_search(getHour($creneaux[$i]), $heure) === false) {
-				array_push($jour, getDay($creneaux[$i]));
-				array_push($heure, getHour($creneaux[$i]));
-			}
-		}
-		else{
-			$jour[] = getDay($creneaux[$i]);
-			$heure[] = getHour($creneaux[$i]);
-		}
-	}
-
-	$r = array('jour' => $jour, 'heure' => $heure);
-	return $r;
-}
-
-function getDay($date){
-	$s = $date->format("D");
-	$day = "";
-	switch ($s) {
-		case 'Mon':
-			$day = "Lundi";
-			break;
-		case 'Tue':
-			$day = "Mardi";
-			break;
-		case 'Wed':
-			$day = "Mercredi";
-			break;
-		case 'Thu':
-			$day = "Jeudi";
-			break;
-		case 'Fri':
-			$day = "Vendredi";
-			break;
-		case 'Sat':
-			$day = "Samedi";
-			break;
-		case 'Sun':
-			$day = "Dimanche";
-			break;
-		default:
-			$day = $s;
-			break;
-	}
-	return $day;
-}
-
-function getHour($date){
-	return $date->format('H');
-}
-?>

@@ -1,4 +1,8 @@
-<?php session_start(); 
+<?php 
+
+if (session_id() == "") {
+    session_start(); 
+}
 
 //Création de la liaison à la base de données
 include '../x.php';
@@ -21,12 +25,12 @@ $data = $stmt->fetchAll();
         }
     </script>
     <body>
-    	 <div style="overflow:scroll; border:#FFFFFF 1px solid; width:70%; height:50%">
+    	 <!-- <div style="overflow:scroll; border:#FFFFFF 1px solid; width:70%; height:50%"> -->
 	 		<?php
     		for ($i=0; $i < sizeof($data); $i++) { 
     			echo('<input type="button" onclick="redirect('.$data[$i][4].')" style="background:none; border:none; color:white; font:20px bold;" value="&nbsp - '.$data[$i][0].' '.$data[$i][1].', '.$data[$i][2].' ; '.$data[$i][3].'"/><br/><hr/>');
     		}
     		?>
-    	</div>
+    	<!-- </div> -->
     </body>
 </html>

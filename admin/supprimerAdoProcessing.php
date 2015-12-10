@@ -14,12 +14,12 @@ $stmt = $db->prepare($sql);
 $stmt->execute(array($id));
 
 //Et de ses créneaux
-$sql = "DELETE FROM creneaux WHERE user_id = ? ;";
+$sql = "DELETE FROM creneaux_bis WHERE user_id = ? ;";
 
 $stmt = $db->prepare($sql);
 $stmt->execute(array($id));
 
 //Redirection
-$redirection = "Location: privateTab.php";
+$redirection = "Location: privateTab_bis.php";
 header($redirection);
 ?>

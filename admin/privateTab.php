@@ -29,7 +29,7 @@ $jour = new DateInterval("P1D");
 include '../x.php';
 
 //Préparation de la requete pour chaque créneaux horaire :
-$sql = "SELECT prenom, nom FROM utilisateurs WHERE id IN (SELECT user_id FROM creneaux WHERE date = ?)";
+$sql = "SELECT prenom, nom FROM utilisateurs WHERE id IN (SELECT user_id FROM creneaux_bis WHERE date(date_debut) <= ? AND date(date_fin) > ? AND jour like ? AND heure = ?)";
 $stmt = $db->prepare($sql);
 ?>
 <html>
@@ -138,21 +138,20 @@ $stmt = $db->prepare($sql);
 					<div>
 						<!-- <input type="button" class="button" value="Envoyer un mail" onclick="afficher('mail');"/> -->
 						<input type="button" class="button" value="Envoyer un mail" onclick="document.location.href='listeMail.php'"/>
-						<br/>
+						
 						<div id="mail" hidden>
 							<?php include("listeMail.php"); ?>			
 						</div>
-						<input type="button" class="button" value="Liste des adorateurs" onclick="afficher('adorateurs');"/>
-						<br/>
-						<div id="adorateurs" hidden>
-							<?php include("liste.php"); ?>
-						</div>
+						
+						<input type="button" class="button" value="Liste des adorateurs" onclick="document.location.href='liste.php'"/>
 						<input type="button" class="button" value="Imprimer le planning" onclick="edition();return false;"/>
-						<br/>
-						<input type="button" class="button" value="Ré-inscrire" onclick=""/>
-						<br/>
+						
+						<input type="button" class="button" value="Gestion" onclick="document.location.href='gestion/gestion.php'"/>
+						
 						<input type="button" class="button" value="Planning public" onclick="document.location.href='../creneaux.php'"/>
-						<br/>
+						
+						<input type="button" class="button" value="Inscrire" onclick="document.location.href='../formulaire.php'"/>
+						
 					</div>
 			</span>
 		</div>
@@ -207,10 +206,9 @@ function getLundi($date){
 }
 
 //Renvoie le nom prénom des personnes inscrites tel jour, telle heure.
-function getPersonnes($jour, $heure, $stmt){
-	$date = $jour;
-	$jour->setTime($heure, 0);
-	$stmt->execute(array($jour->format("Y-m-d H:i")));
+function getPersonnes($date, $heure, $stmt){
+	$jour = getDay($date);
+	$stmt->execute(array($date->format("Y-m-d"), $date->format("Y-m-d"), $jour, $heure));
 	$string = "";
 	if (($data = $stmt->fetchAll())){
 		//Si il y a plusieurs résultats

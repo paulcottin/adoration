@@ -4,7 +4,7 @@
 include '../x.php';
 
 //récupération des utilisateurs
-$sql = "SELECT prenom, nom, email, telephone FROM utilisateurs;";
+$sql = "SELECT prenom, nom, email, telephone FROM utilisateurs ORDER BY nom;";
 $stmt = $db->prepare($sql);
 $stmt->execute();
 $data = $stmt->fetchAll();
